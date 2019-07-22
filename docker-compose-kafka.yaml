@@ -1,0 +1,237 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+
+# NOTE: This is not the way a Kafka cluster would normally be deployed in production, as it is not secure
+# and is not fault tolerant. This example is a toy deployment that is only meant to exercise the Kafka code path
+# of the ordering service.
+
+version: '2'
+
+networks:
+  byfn:
+
+services:
+  zookeeper0.example.com:
+    container_name: zookeeper.example.com
+    image: hyperledger/fabric-zookeeper:$ZK_TAG
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+    - byfn
+    ports:
+    - 2181:2181
+    - 2888:2888
+    - 3888:3888    
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
+
+
+  zookeeper1.example.com:
+    container_name: zookeeper1.example.com
+    image: hyperledger/fabric-zookeeper:$ZK_TAG
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+    - byfn
+    ports:
+    - 2181:2181
+    - 2888:2888
+    - 3888:3888
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
+
+  zookeeper2.example.com:
+    container_name: zookeeper2.example.com
+    image: hyperledger/fabric-zookeeper:$ZK_TAG
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+    - byfn 
+    ports:
+    - 2181:2181
+    - 2888:2888
+    - 3888:3888
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
+
+
+  kafka0.example.com:
+    container_name: kafka0.example.com
+    image: hyperledger/fabric-kafka:$KAFKA_TAG
+    depends_on:
+    - zookeeper0.example.com
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.example.com:2181:zookeeper1.example.com:2181:zookeeper2.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka0.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+    ports:
+    - 9092:9092
+    - 9093:9093
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
+
+
+  kafka1.example.com:
+    container_name: kafka1.example.com
+    image: hyperledger/fabric-kafka:$KAFKA_TAG
+    depends_on:
+    - zookeeper0.example.com
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.example.com:2181:zookeeper1.example.com:2181:zookeeper2.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka1.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+    ports:
+    - 9092:9092
+    - 9093:9093
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
+
+  kafka2.example.com:
+    container_name: kafka2.example.com
+    image: hyperledger/fabric-kafka:$KAFKA_TAG
+    depends_on:
+    - zookeeper0.example.com
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.example.com:2181:zookeeper1.example.com:2181:zookeeper2.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka2.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+    ports:
+    - 9092:9092
+    - 9093:9093
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
+
+  kafka3.example.com:
+    container_name: kafka3.example.com
+    image: hyperledger/fabric-kafka:$KAFKA_TAG
+    depends_on:
+    - zookeeper0.example.com
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    environment:
+      - KAFKA_BROKER_ID=4
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0.example.com:2181:zookeeper1.example.com:2181:zookeeper2.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka3.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_MESSAGE_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576 # 1 * 1024 * 1024 B
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+    ports:
+    - 9092:9092
+    - 9093:9093
+    extra_hosts:    
+    - kafka0.example.com:10.10.72.10
+    - kafka1.example.com:10.14.175.11
+    - kafka2.example.com:10.160.216.6 
+    - kafka3.example.com:10.10.64.10
+    - orderer0.example.com:10.10.72.10
+    - orderer1.example.com:10.14.175.11        
+    - orderer2.example.com:10.160.216.6 
+    - orderer3.example.com:10.10.64.10
+    - zookeeper0.example.com:10.10.72.10
+    - zookeeper1.example.com:10.14.175.11  
+    - zookeeper2.example.com:10.160.216.6
