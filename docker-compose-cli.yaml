@@ -55,70 +55,163 @@ services:
     networks:
       - byfn      
 
+  couchdb0:
+    container_name: couchdb0
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+    # for example map it to utilize Fauxton User Interface in dev environments.
+    ports:
+      - "5984:5984"
+    networks:
+      - byfn
 
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=  
     extends:
       file:  base/docker-compose-base.yaml
       service: peer0.org1.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0      
 
   peer1.org1.example.com:
     container_name: peer1.org1.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=      
     extends:
       file:  base/docker-compose-base.yaml
       service: peer1.org1.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0
 
   peer0.org2.example.com:
     container_name: peer0.org2.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=      
     extends:
       file:  base/docker-compose-base.yaml
       service: peer0.org2.example.com
     networks:
       - byfn
-
+    depends_on:
+      - couchdb0
   peer1.org2.example.com:
     container_name: peer1.org2.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=        
     extends:
       file:  base/docker-compose-base.yaml
       service: peer1.org2.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0  
 
   peer0.org3.example.com:
     container_name: peer0.org3.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=    
     extends:
       file:  base/docker-compose-base.yaml
       service: peer0.org3.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0  
 
   peer1.org3.example.com:
     container_name: peer1.org3.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=        
     extends:
       file:  base/docker-compose-base.yaml
       service: peer1.org3.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0  
       
   peer0.org4.example.com:
     container_name: peer0.org4.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWO    
     extends:
       file:  base/docker-compose-base.yaml
       service: peer0.org4.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0  
 
   peer1.org4.example.com:
     container_name: peer1.org4.example.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=172.17.208.116:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWO    
     extends:
       file:  base/docker-compose-base.yaml
       service: peer1.org4.example.com
     networks:
       - byfn
+    depends_on:
+      - couchdb0      
 
   cli:
     container_name: cli
@@ -150,15 +243,15 @@ services:
     depends_on:
       - orderer0.example.com
       - orderer1.example.com
-      - orderer2.example.com      
-      - orderer3.example.com      
+      # - orderer2.example.com      
+      # - orderer3.example.com      
       - peer0.org1.example.com
       - peer1.org1.example.com
-      - peer0.org2.example.com
-      - peer1.org2.example.com
-      - peer0.org3.example.com
-      - peer1.org3.example.com
-      - peer0.org4.example.com
-      - peer1.org4.example.com      
+      # - peer0.org2.example.com
+      # - peer1.org2.example.com
+      # - peer0.org3.example.com
+      # - peer1.org3.example.com
+      # - peer0.org4.example.com
+      # - peer1.org4.example.com      
     networks:
       - byfn
